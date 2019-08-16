@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/prop/main",
+    "pages/speciality/main",
+    "pages/detail/main",
+    "pages/property/main",
+    "pages/logs/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1aad19",
+    "navigationBarTitleText": "神奇宝贝图鉴",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#fafafa",
+    "selectedColor": "#333",
+    "borderStyle": "white",
+    "list": [
+      {
+        "text": "宝可梦",
+        "pagePath": "pages/index/main",
+        "iconPath": "static/tabs/a1.png",
+        "selectedIconPath": "static/tabs/a2.png"
+      },
+      {
+        "text": "道具",
+        "pagePath": "pages/prop/main",
+        "iconPath": "static/tabs/a1.png",
+        "selectedIconPath": "static/tabs/a3.png"
+      },
+      {
+        "text": "属性",
+        "pagePath": "pages/property/main",
+        "iconPath": "static/tabs/a1.png",
+        "selectedIconPath": "static/tabs/a4.png"
+      }
+    ],
+    "position": "bottom"
+  }
+}

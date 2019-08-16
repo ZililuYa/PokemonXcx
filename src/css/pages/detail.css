@@ -1,0 +1,149 @@
+
+.detail {
+  padding: 20px 0;
+}
+
+.detail .section {
+  width: 100%;
+  padding: 5px 0;
+}
+
+.detail .section .capacity {
+  width: 100%;
+  font-size: 13px;
+  text-align: center;
+  padding: 5px 0;
+  display: flex;
+}
+
+.detail .section .a {
+  width: 20%;
+}
+
+.detail .section .b {
+  width: 40%;
+}
+
+.detail .section .c {
+  width: 40%;
+}
+
+.detail .picture {
+  width: 30%;
+  height: 30vw;
+}
+
+.detail .img {
+  text-align: center;
+}
+
+.detail .li {
+  width: 100%;
+  border-bottom: 1px solid #f9f9f9;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.detail .em {
+  font-size: 12px;
+  color: #878787;
+  margin-left: 5px;
+}
+
+.detail .property {
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  width: 56px;
+  text-align: center;
+  box-sizing: border-box;
+  margin-top: 15px;
+  font-size: 12px;
+  border-radius: 20px;
+  padding: 0 10px;
+  margin-left: 10px;
+  color: #fff
+}
+
+.detail .li {
+  font-weight: bold;
+}
+
+.detail .fr {
+  font-weight: normal;
+}
+
+.detail .title {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 20px;
+  height: 30px;
+  line-height: 40px;
+  font-size: 12px;
+  background-color: #f9f9f9;
+  color: #707070;
+}
+
+.detail .race .rli {
+  height: 30px;
+  line-height: 30px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 5px;
+}
+
+.detail .color1 .c {
+  background-color: #8AC654;
+}
+
+.detail .color2 .c {
+  background-color: #F8CB3C;
+}
+
+.detail .color3 .c {
+  background-color: #D98837;
+}
+
+.detail .color4 .c {
+  background-color: #59C3D0;
+}
+
+.detail .color5 .c {
+  background-color: #5890CD;
+}
+
+.detail .color6 .c {
+  background-color: #A456D0;
+}
+
+.detail .race .a {
+  font-size: 12px;
+  height: 30px;
+  line-height: 30px;
+  display: inline-block;
+}
+
+.detail .race .b {
+  display: inline-block;
+  width: 30px;
+  margin-right: 10px;
+  font-size: 12px;
+  text-align: right;
+  height: 30px;
+  line-height: 30px;
+}
+
+.detail .race .c {
+  display: inline-block;
+  height: 14px;
+  margin-top: 8px;
+}
+
+.detail .desc {
+  padding: 20px;
+  font-size: 13px;
+}

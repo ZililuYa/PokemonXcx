@@ -1,0 +1,16 @@
+
+.img-property {
+  width: 100%;
+}
+
+.img-property .title {
+  width: 100%;
+  font-size: 15px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.img-property .img {
+  width: 100%;
+  height: 106vw;
+}
