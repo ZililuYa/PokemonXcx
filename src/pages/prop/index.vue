@@ -1,14 +1,13 @@
 <template>
   <div class="prop">
-    <searchInput :isFocus="isFocus" :placeholder="placeholder" @confirm="confirm"
-                 @clear="clear"></searchInput>
+    <searchInput :isFocus="isFocus" :placeholder="placeholder" @confirm="confirm"></searchInput>
     <div class="ol">
       <div class="li" v-for="(i, k) in list" :key="k" @click="click(i)" v-if="i">
         <img :src="i.imgUrl?i.imgUrl:sprite" alt=""
              class="fl img"> <span class="fl em">#{{i.id}}</span>
         <span class="fr">{{i.nameZh}}</span>
       </div>
-      <div class="loading">{{loading?'加载数据中':'已经全部显示'}}</div>
+      <div class="loading">{{loading?'加载数据中':list.length>1?'已经全部显示了喔 😄':'暂无相关道具喔 😣'}}</div>
     </div>
   </div>
 </template>
@@ -43,12 +42,13 @@
         });
       },
       confirm(e) {
+        if (!e) {
+          this.search(undefined);
+          return;
+        }
         e = e.target.value;
         if (e)
           this.search(e);
-      },
-      clear() {
-        this.search(undefined);
       },
       search(e) {
         let list = [];

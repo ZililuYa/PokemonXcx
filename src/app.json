@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/more/main",
     "pages/egg/main",
     "pages/prop/main",
     "pages/propDetail/main",
@@ -11,8 +12,8 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#1aad19",
-    "navigationBarTitleText": "神奇宝贝图鉴",
+    "navigationBarBackgroundColor": "#d60909",
+    "navigationBarTitleText": "神奇宝贝百科",
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
@@ -30,14 +31,14 @@
       {
         "text": "道具",
         "pagePath": "pages/prop/main",
-        "iconPath": "static/tabs/a1.png",
-        "selectedIconPath": "static/tabs/a3.png"
+        "iconPath": "static/tabs/a5.png",
+        "selectedIconPath": "static/tabs/a4.png"
       },
       {
-        "text": "属性",
-        "pagePath": "pages/property/main",
-        "iconPath": "static/tabs/a1.png",
-        "selectedIconPath": "static/tabs/a4.png"
+        "text": "更多",
+        "pagePath": "pages/more/main",
+        "iconPath": "static/tabs/a6.png",
+        "selectedIconPath": "static/tabs/a3.png"
       }
     ],
     "position": "bottom"

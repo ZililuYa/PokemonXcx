@@ -43,6 +43,7 @@ export function ajax(url, data, method, success = () => {
         console.log('成功返回---->', res.data);
         if (res.data.code !== 200) {
           mpvue.showToast({
+            icon: 'none',
             title: res.data.message
           });
           error(res)
@@ -52,6 +53,7 @@ export function ajax(url, data, method, success = () => {
         }
       } else {
         mpvue.showToast({
+          icon: 'none',
           title: '服务器异常'
         });
         error(res)
@@ -377,7 +379,7 @@ export function globalError() {
   mpvue.hideLoading();
   mpvue.showToast({
     title: '加载失败',
-    icon: 'loading'
+    icon: 'none',
   });
   setTimeout(() => {
     mpvue.switchTab({url: '/pages/index/main'})
