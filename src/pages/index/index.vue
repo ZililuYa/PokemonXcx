@@ -1,7 +1,6 @@
 <template>
   <div class="app-main">
-    <searchInput :isFocus="isFocus" :placeholder="placeholder" @confirm="confirm"
-                 @clear="clear"></searchInput>
+    <searchInput :isFocus="isFocus" :placeholder="placeholder" @confirm="confirm"></searchInput>
     <generation v-for="i in generation" @showEvent="showEvent" :generation="i.index" :title="i.title" :search="search"
                 :show="i.show" :key="i.index"></generation>
 
@@ -37,7 +36,10 @@
 
     methods: {
       confirm(e) {
-        this.search = e.target.value;
+        if (!e) {
+          this.search = '';
+        } else
+          this.search = e.target.value;
         // this.$set(this.search, e.target.value)
       },
       showEvent(e) {
@@ -48,9 +50,6 @@
         });
         list[i].show = e.show;
         this.$set(this.generation, list);
-      },
-      clear() {
-        this.search = '';
       },
       // goToCou() {
       //   mpvue.navigateTo({url: '../counter/main'})

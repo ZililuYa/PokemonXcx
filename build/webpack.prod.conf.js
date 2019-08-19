@@ -83,6 +83,13 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),
     new MpvueVendorPlugin({
       platform: process.env.PLATFORM
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        drop_debugger: true,
+        drop_console: true
+      }
     })
   ]
 })
@@ -113,7 +120,7 @@ if (config.build.bundleAnalyzerReport) {
 var useUglifyJs = process.env.PLATFORM !== 'swan'
 if (useUglifyJs) {
   webpackConfig.plugins.push(new UglifyJsPlugin({
-    sourceMap: true
+    sourceMap: true,
   }))
 }
 

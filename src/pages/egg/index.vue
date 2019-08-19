@@ -2,33 +2,16 @@
   <div class="detail">
     <div class="ol">
       <div class="li">
-        特性编号
-        <span class="fr em">#{{data.id}}</span>
+        蛋组名称
+        <span class="fr">{{name}}</span>
       </div>
       <div class="li">
-        特性名称
-        <span class="fr">{{data.nameZh}}</span>
-        <span class="fr em">（{{data.nameJa}}）</span>
+        宝可梦数量
+        <span class="fr">{{pokemon.length}}</span>
       </div>
-      <div class="li">
-        所属世代
-        <span class="fr">{{data.generation}}代</span>
+      <div class="title">
+        此蛋组的宝可梦
       </div>
-    </div>
-    <div class="title">
-      描述
-    </div>
-    <div class="desc">
-      {{data.desc}}
-    </div>
-    <div class="title">
-      对战效果
-    </div>
-    <div class="desc">
-      {{data.effect}}
-    </div>
-    <div class="title">
-      拥有此特性的宝可梦
     </div>
     <div class="generation">
       <div class="ol">
@@ -44,12 +27,13 @@
 </template>
 
 <script>
-  import {ajax, getPokemon, globalError, globalToPokemonDetail} from '../../utils'
+  import {ajax, isIndex, isProperty, globalError, globalToPokemonDetail} from '../../utils'
 
   export default {
     data() {
       return {
         data: {},
+        name: '',
         pokemon: []
       }
     },
@@ -60,12 +44,18 @@
         title: '加载中...',
       });
 
-      const name = option.name ? option.name : '结实';
+      const name = option.name ? option.name : '怪兽';
+      this.name = name;
       const success = res => {
         mpvue.hideLoading();
         if (res.data.length) {
-          this.data = res.data[0];
-          this.pokemon = getPokemon(this.data.pokemons);
+          this.pokemon = res.data.map(n => {
+            n.index = isIndex(n.index);
+            n.g1 = isProperty(n.type1);
+            n.g2 = isProperty(n.type2);
+            return n
+          });
+
         } else {
           error();
         }
@@ -74,7 +64,7 @@
         globalError();
       };
 
-      ajax('/ability/detail', {nameZh: name}, 'GET', success, error)
+      ajax('/pokemon/list', {eggGroup: name}, 'GET', success, error)
     },
     methods: {
       click(index) {

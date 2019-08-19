@@ -20,20 +20,20 @@
       </div>
       <div class="li" @click="toSpeciality(data.ability1)">
         特性
-        <span class="fr">{{data.ability1}}</span>
+        <span class="fr href">{{data.ability1}}</span>
       </div>
       <div class="li" @click="toSpeciality(data.ability2)" v-if="data.ability2">
         特性
-        <span class="fr">{{data.ability2}}</span>
+        <span class="fr href">{{data.ability2}}</span>
       </div>
       <div class="li" @click="toSpeciality(data.abilityHide)" v-if="data.abilityHide">
         隐藏特性
-        <span class="fr">{{data.abilityHide}}</span>
+        <span class="fr href">{{data.abilityHide}}</span>
       </div>
       <div class="li">
         蛋组
-        <span class="fr">{{data.detail.eggGroup1}}</span>
-        <span class="fr" v-if="data.detail.eggGroup2">{{data.detail.eggGroup2}}&emsp;</span>
+        <span class="fr href" @click="toEgg(data.detail.eggGroup1)">{{data.detail.eggGroup1}}</span>
+        <span class="fr href" @click="toEgg(data.detail.eggGroup2)" v-if="data.detail.eggGroup2">{{data.detail.eggGroup2}}</span>
       </div>
       <div class="li">
         种类
@@ -104,7 +104,7 @@
       </div>
 
       <div class="title">
-        友情广告
+        Advert
       </div>
       <div class="banner">
         <ad unit-id="adunit-4322de44f112529c"></ad>
@@ -149,20 +149,28 @@
           <div class="c">{{section.b5_100}}</div>
         </div>
       </div>
+      <div class="title">
+        对战相克
+      </div>
+      <div class="listCalc">
+        <div class="fight fl" v-for="(i, k) in listCalc" :key="k">
+          <div class="attribute" :class="'property'+(k+1)">{{property[k]}}</div>
+          <div class="t" :class="i>1?'red':i<1?'blue':''">{{i}}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import {ajax, isProperty, effortValue, section} from '../../utils'
+  import {ajax, isProperty, effortValue, section, globalError, restrainClac} from '../../utils'
 
   export default {
     component: {},
-    onShow: function () {
-    },
     onShareAppMessage: function () {
       return {
-        path: '/pages/detail/main?name=' + this._index
+        path: '/pages/detail/main?name=' + this._index,
+        query: 'name=' + this._index,
       }
     },
     onLoad: function (option) {
@@ -170,6 +178,8 @@
       mpvue.showLoading({
         title: '加载中...',
       });
+      // const opt = mpvue.getLaunchOptionsSync(); // 获取参数，目前不能用
+      // console.log(opt);
       const index = option.index ? option.index : 1;
       this._index = parseInt(index);
       const success = res => {
@@ -178,6 +188,9 @@
           this.data = res.data[0];
           this.g1 = isProperty(this.data.type1);
           this.g2 = isProperty(this.data.type2);
+          let list = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+          this.listCalc = restrainClac(list, this.g1);
+          if (this.data.type2) this.listCalc = restrainClac(this.listCalc, this.g2);
           this.basicsCount = effortValue(this.data.detail.effortValue);
           this.section = section(this.data.baseStat);
         } else {
@@ -185,14 +198,7 @@
         }
       };
       const error = () => {
-        mpvue.hideLoading();
-        mpvue.showToast({
-          title: '加载宝可梦失败',
-          icon: 'loading'
-        });
-        setTimeout(() => {
-          mpvue.switchTab({url: '/pages/index/main'})
-        }, 1500)
+        globalError();
       };
       ajax('/pokemon/detail', {index, storage: 'detail' + index}, 'GET', success, error)
     },
@@ -206,10 +212,17 @@
           detail: {},
           baseStat: {}
         },
+        property: ['普', '飞', '火', '超', '水', '虫', '电', '岩', '草', '鬼', '冰', '龙', '斗', '恶', '毒', '钢', '地', '妖'],
+        listCalc: [],
         section: {},
       }
     },
     methods: {
+      toEgg(egg) {
+        mpvue.navigateTo({
+          url: "/pages/egg/main?name=" + egg
+        });
+      },
       toSpeciality(name) {
         mpvue.navigateTo({
           url: "/pages/speciality/main?name=" + name

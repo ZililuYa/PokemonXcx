@@ -3,8 +3,8 @@
     <searchInput :isFocus="isFocus" :placeholder="placeholder" @confirm="confirm"
                  @clear="clear"></searchInput>
     <div class="ol">
-      <div class="li" v-for="(i, k) in list" :key="k">
-        <img :src="i.imgUrl?i.imgUrl:'https://s1.52poke.wiki/wiki/d/df/Bag_%E6%9C%AA%E7%9F%A5_Sprite.png'" alt=""
+      <div class="li" v-for="(i, k) in list" :key="k" @click="click(i)" v-if="i">
+        <img :src="i.imgUrl?i.imgUrl:sprite" alt=""
              class="fl img"> <span class="fl em">#{{i.id}}</span>
         <span class="fr">{{i.nameZh}}</span>
       </div>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import {ajax} from '../../utils'
+  import {ajax, globalError} from '../../utils'
   import searchInput from '../../components/searchInput'
 
   export default {
@@ -31,6 +31,17 @@
       this.list = [...this.list, ...list];
     },
     methods: {
+      click(i) {
+        mpvue.setStorage({
+          key: 'prop',
+          data: i,
+          success: function () {
+            mpvue.navigateTo({
+              url: "/pages/propDetail/main"
+            });
+          }
+        });
+      },
       confirm(e) {
         e = e.target.value;
         if (e)
@@ -71,6 +82,7 @@
     },
     data() {
       return {
+        sprite: 'https://pokemon.forver.cc/sprite-1.png',
         data: [],
         list: [],
         page: 2,
@@ -94,14 +106,7 @@
         }
       };
       const error = () => {
-        mpvue.hideLoading();
-        mpvue.showToast({
-          title: '加载失败',
-          icon: 'loading'
-        });
-        setTimeout(() => {
-          mpvue.switchTab({url: '/pages/index/main'})
-        }, 1500)
+        globalError();
       };
       ajax('/item/list', {storage: 'item'}, 'GET', success, error)
     },

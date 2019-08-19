@@ -15,6 +15,7 @@
         <div class="weui-search-bar__text">搜索</div>
       </label>
     </div>
+    <div class="weui-search-bar__cancel-btn" :hidden="!isFocusData" v-if="qq" @click="search">搜索</div>
     <div class="weui-search-bar__cancel-btn" :hidden="!isFocusData" @click="hideInput">取消</div>
   </div>
 </template>
@@ -23,8 +24,19 @@
     data() {
       return {
         inputValue: this.value,
-        isFocusData: this.isFocus
+        isFocusData: this.isFocus,
+        qq: false,
       };
+    },
+    onLoad() {
+      const that = this;
+      mpvue.getSystemInfo({
+        success(res) {
+          if (res.AppPlatform === 'qq') {
+            that.qq = true;
+          }
+        }
+      });
     },
     props: {
       value: {
@@ -59,7 +71,7 @@
       hideInput() {
         this.inputValue = '';
         this.isFocusData = false;
-        this.$emit('clear')
+        this.$emit('confirm', '')
       },
       clearInput() {
         this.inputValue = '';
@@ -79,6 +91,10 @@
       /* 点击完成时触发 */
       confirm(e) {
         this.$emit('confirm', e);
+      },
+      /* 点击搜索时触发 */
+      search() {
+        this.$emit('confirm', {target: {value: this.inputValue}});
       }
     }
   };

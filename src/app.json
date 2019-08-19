@@ -1,7 +1,9 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/egg/main",
     "pages/prop/main",
+    "pages/propDetail/main",
     "pages/speciality/main",
     "pages/detail/main",
     "pages/property/main",

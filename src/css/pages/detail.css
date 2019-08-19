@@ -16,6 +16,12 @@
   display: flex;
 }
 
+.detail .li .href {
+  color: #3d8dcc;
+  text-decoration: underline;
+  margin-left: 15px;
+}
+
 .detail .section .a {
   width: 20%;
 }
@@ -146,4 +152,34 @@
 .detail .desc {
   padding: 20px;
   font-size: 13px;
+}
+
+.detail .listCalc {
+  margin: 10px 0;
+  overflow: hidden;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.detail .listCalc .fight {
+  width: 11.111111%;
+  text-align: center;
+  font-size: 13px;
+  border-left: 1px solid #eee;
+  border-top: 1px solid #eee;
+  box-sizing: border-box;
+}
+
+.detail .listCalc .attribute {
+  color: #fff;
+}
+
+.detail .listCalc .red {
+  color: #f11;
+  font-weight: bold;
+}
+
+.detail .listCalc .blue {
+  color: #11f;
+  font-weight: bold;
 }

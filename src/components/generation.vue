@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import {ajax, isProperty, isIndex} from '../utils'
+  import {ajax, isProperty, isIndex, globalToPokemonDetail} from '../utils'
 
   export default {
     props: ['generation', 'title', 'show', 'search'],
@@ -28,9 +28,7 @@
     },
     methods: {
       click(index) {
-        mpvue.navigateTo({
-          url: "/pages/detail/main?index=" + index
-        });
+        globalToPokemonDetail(index);
       },
       switchover() {
         this.$emit('showEvent', {show: !this.show, index: this.generation});
