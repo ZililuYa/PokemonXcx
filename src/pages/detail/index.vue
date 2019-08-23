@@ -103,10 +103,10 @@
         </div>
       </div>
 
-      <div class="title">
+      <div class="title" v-if="!qq">
         Advert
       </div>
-      <div class="banner">
+      <div class="banner" v-if="!qq">
         <ad unit-id="adunit-4322de44f112529c"></ad>
       </div>
       <div class="title">
@@ -158,15 +158,77 @@
           <div class="t" :class="i>1?'red':i<1?'blue':''">{{i}}</div>
         </div>
       </div>
+      <div class="title">
+        可学会招式表
+      </div>
+      <mpNavbar :tabs="tabs" :activeIndex="tabIndex" @tabClick="tabClick"></mpNavbar>
+      <div class="upgrade" v-if="tabIndex===0">
+        <div class="list">
+          <div class="item" :key="k" v-for="(i, k) in learnSetByLevelingUp">
+            <span class="level">{{i.level1}}</span>
+            <span class="move">{{i.move}}</span>
+            <div class="fr">
+              <span class="power br">{{i.power}}</span>
+              <span class="power br">{{i.accuracy}}</span>
+              <span class="power">{{i.pp}}</span>
+              <span class="power sx" :class="'property'+i.isx">{{i.type}}</span>
+              <span class="power sx" :class="'property'+i.ifl">{{i.category}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="upgrade" v-if="tabIndex===1">
+        <div class="list">
+          <div class="item" :key="k" v-for="(i, k) in learnSetByTechnicalMachine">
+            <img :src="i.imgUrl" class="imgUrl fl" alt=""/>
+            <span class="move">{{i.move}}</span>
+            <div class="fr">
+              <span class="power br">{{i.power}}</span>
+              <span class="power br">{{i.accuracy}}</span>
+              <span class="power">{{i.pp}}</span>
+              <span class="power sx" :class="'property'+i.isx">{{i.type}}</span>
+              <span class="power sx" :class="'property'+i.ifl">{{i.category}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="upgrade" v-if="tabIndex===2">
+        <div class="list">
+          <div class="item" :key="k" v-for="(i, k) in learnSetByBreeding">
+            <span class="move">{{i.move}}</span>
+            <div class="fr">
+              <span class="power br">{{i.power}}</span>
+              <span class="power br">{{i.accuracy}}</span>
+              <span class="power">{{i.pp}}</span>
+              <span class="power sx" :class="'property'+i.isx">{{i.type}}</span>
+              <span class="power sx" :class="'property'+i.ifl">{{i.category}}</span>
+            </div>
+            <div class="icon-list">
+              <div @click="goTo(a)" class="fl sprite-icon" :key="b" :class="'sprite-icon-'+a"
+                   v-for="(a, b) in i.icon"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import {ajax, isProperty, effortValue, section, globalError, restrainClac} from '../../utils'
+  import {
+    ajax,
+    isProperty,
+    effortValue,
+    section,
+    globalError,
+    restrainCalc,
+    getPokemon,
+    globalToPokemonDetail
+  } from '../../utils'
+  import mpNavbar from 'mpvue-weui/src/navbar';
 
   export default {
-    component: {},
+    components: {mpNavbar},
     onShareAppMessage: function () {
       return {
         path: '/pages/detail/main?name=' + this._index,
@@ -174,6 +236,14 @@
       }
     },
     onLoad: function (option) {
+      const that = this;
+      mpvue.getSystemInfo({
+        success(res) {
+          if (res.AppPlatform === 'qq') {
+            that.qq = true;
+          }
+        }
+      });
       mpvue.showShareMenu();
       mpvue.showLoading({
         title: '加载中...',
@@ -182,42 +252,81 @@
       // console.log(opt);
       const index = option.index ? option.index : 1;
       this._index = parseInt(index);
-      const success = res => {
-        mpvue.hideLoading();
-        if (res.data.length) {
-          this.data = res.data[0];
-          this.g1 = isProperty(this.data.type1);
-          this.g2 = isProperty(this.data.type2);
-          let list = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-          this.listCalc = restrainClac(list, this.g1);
-          if (this.data.type2) this.listCalc = restrainClac(this.listCalc, this.g2);
-          this.basicsCount = effortValue(this.data.detail.effortValue);
-          this.section = section(this.data.baseStat);
-        } else {
-          error();
-        }
-      };
-      const error = () => {
-        globalError();
-      };
-      ajax('/pokemon/detail', {index, storage: 'detail' + index}, 'GET', success, error)
+      this.getPokemonEvent(index);
     },
     data() {
       return {
+        tabIndex: 0,
+        tabs: ['升级', '学习器', '蛋招式'],
         g1: '',
         g2: '',
         basicsCount: '',
         _index: '',
+        learnSetByTechnicalMachine: [],
+        learnSetByLevelingUp: [],
+        learnSetByBreeding: [],
         data: {
           detail: {},
-          baseStat: {}
+          baseStat: {},
         },
         property: ['普', '飞', '火', '超', '水', '虫', '电', '岩', '草', '鬼', '冰', '龙', '斗', '恶', '毒', '钢', '地', '妖'],
         listCalc: [],
         section: {},
+        qq: false,
       }
     },
     methods: {
+      goTo(index) {
+        mpvue.showLoading({
+          title: '加载中...',
+        });
+        index = parseInt(index);
+        this.getPokemonEvent(index);
+      },
+      getPokemonEvent(index) {
+        this.learnSetByLevelingUp = [];
+        this.learnSetByTechnicalMachine = [];
+        this.learnSetByBreeding = [];
+        const success = res => {
+          // 老缓存数据处理
+          if (res.data.length && !res.data[0].learnSetByLevelingUp) {
+            mpvue.removeStorageSync('detail' + index);
+            this.getPokemon(index);
+            return;
+          }
+
+          mpvue.hideLoading();
+
+          if (res.data.length) {
+            this.data = res.data[0];
+            this.learnSetByLevelingUp = this.data.learnSetByLevelingUp.map(ls => {
+              return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
+            });
+            this.learnSetByTechnicalMachine = this.data.learnSetByTechnicalMachine.map(ls => {
+              return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
+            });
+            this.learnSetByBreeding = this.data.learnSetByBreeding.map(ls => {
+              return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category), icon: getPokemon(ls.parent, true)}
+            });
+            this.g1 = isProperty(this.data.type1);
+            this.g2 = isProperty(this.data.type2);
+            let list = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+            this.listCalc = restrainCalc(list, this.g1);
+            if (this.data.type2) this.listCalc = restrainCalc(this.listCalc, this.g2);
+            this.basicsCount = effortValue(this.data.detail.effortValue);
+            this.section = section(this.data.baseStat);
+          } else {
+            error();
+          }
+        };
+        const error = () => {
+          globalError();
+        };
+        ajax('/pokemon/detail', {index, storage: 'detail' + index}, 'GET', success, error)
+      },
+      tabClick(tab) {
+        this.tabIndex = tab;
+      },
       toEgg(egg) {
         mpvue.navigateTo({
           url: "/pages/egg/main?name=" + egg

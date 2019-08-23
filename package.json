@@ -1,8 +1,8 @@
 {
   "name": "pokemon_xcx",
-  "version": "3.1.1",
+  "version": "3.1.3",
   "mpvueTemplateProjectVersion": "0.1.0",
-  "description": "A Mpvue project",
+  "description": "52Poke",
   "author": "1029131145",
   "private": true,
   "scripts": {

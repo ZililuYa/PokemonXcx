@@ -1,6 +1,6 @@
 <script>
   export default {
-    created() {
+    mounted() {
       // 调用API从本地缓存中获取数据
       /*
        * 平台 api 差异的处理方式:  api 方法统一挂载到 mpvue 名称空间, 平台判断通过 mpvuePlatform 特征字符串
@@ -23,8 +23,33 @@
       //   logs.unshift(Date.now())
       //   mpvue.setStorageSync('logs', logs)
       // }
-    },
-    log() {
+      const updateManager = mpvue.getUpdateManager();
+
+      updateManager.onCheckForUpdate(function (res) {
+        // 请求完新版本信息的回调
+        console.log(res.hasUpdate)
+      });
+
+      updateManager.onUpdateReady(function () {
+        mpvue.showToast({
+          title: '新版本已经准备好，3秒后重启应用',
+          icon: 'none',
+          duration: 3000
+        });
+        setTimeout(function () {
+          updateManager.applyUpdate()
+        }, 3000);
+
+      });
+
+      updateManager.onUpdateFailed(function () {
+        // 新版本下载失败
+        mpvue.showModal({
+          title: '提示',
+          content: '检查到有新版本，但下载失败，请检查网络设置',
+          showCancel: false,
+        })
+      })
     }
   }
 </script>

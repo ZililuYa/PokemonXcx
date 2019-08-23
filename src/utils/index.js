@@ -18,6 +18,7 @@
 //   return `${t1} ${t2}`
 // }
 
+// api接口
 const baseUrl = 'https://pokemon.fantasticmao.cn';
 
 export function ajax(url, data, method, success = () => {
@@ -74,6 +75,7 @@ export function ajax(url, data, method, success = () => {
   })
 }
 
+// 基础点数剔除 0
 export function effortValue(eff) {
   eff = eff.split(',');
   let list = [];
@@ -83,9 +85,16 @@ export function effortValue(eff) {
   return list.join(',')
 }
 
+// 返回属性id
 export function isProperty(type) {
 
   switch (type) {
+    case '物理':
+      return 91;
+    case '特殊':
+      return 92;
+    case '变化':
+      return 93;
     case '一般':
       return 1;
     case '飞行':
@@ -127,7 +136,10 @@ export function isProperty(type) {
   }
 }
 
-export function restrainClac(list, index) {
+// 计算个体
+export function restrainCalc(list, index) {
+
+  // 计算数值拔群
   function calc(i, num) {
     if (num === 0) {
       list[i] = 0;
@@ -317,6 +329,7 @@ function capacityCalc(number_race, number_capacity, number_unit, level, amend) {
   return isIndex(parseInt(number));
 }
 
+// 区间
 export function section(baseStat) {
 
   let b0_50 = hpCalc(baseStat.hp, 0, 0, 50) + ' ~ ' + hpCalc(baseStat.hp, 252, 31, 50);
@@ -332,7 +345,7 @@ export function section(baseStat) {
   let b3_100 = capacityCalc(baseStat.spAttack, 0, 0, 100, 0.9) + ' ~ ' + capacityCalc(baseStat.spAttack, 252, 31, 100, 1.1);
   let b4_100 = capacityCalc(baseStat.spDefense, 0, 0, 100, 0.9) + ' ~ ' + capacityCalc(baseStat.spDefense, 252, 31, 100, 1.1);
   let b5_100 = capacityCalc(baseStat.speed, 0, 0, 100, 0.9) + ' ~ ' + capacityCalc(baseStat.speed, 252, 31, 100, 1.1);
-  const data = {
+  return {
     b0_50,
     b1_50,
     b2_50,
@@ -346,26 +359,30 @@ export function section(baseStat) {
     b4_100,
     b5_100,
   };
-  return data;
 }
 
-export function getPokemon(names) {
+// 根据名字获取pokemon
+export function getPokemon(names, id) {
   let _list = [];
+  let _id = [];
   [1, 2, 3, 4, 5, 6, 7].forEach(i => {
     const _arr = mpvue.getStorageSync('list' + i);
     if (_arr)
       _arr.forEach(res => {
         if (names.indexOf(res.nameZh) !== -1) {
           res.index = isIndex(res.index);
+          if (id) return _id.push(res.index);
           res.g1 = isProperty(res.type1);
           res.g2 = isProperty(res.type2);
           _list.push(res);
         }
       })
   });
+  if (id) return _id;
   return _list
 }
 
+// 补齐三位数
 export function isIndex(i) {
   i = i.toString();
   const num = i.length;
@@ -374,7 +391,7 @@ export function isIndex(i) {
   else return i;
 }
 
-
+// 全局error处理
 export function globalError() {
   mpvue.hideLoading();
   mpvue.showToast({
@@ -386,6 +403,7 @@ export function globalError() {
   }, 1500);
 }
 
+// 详情跳转宝可梦详情
 export function globalToPokemonDetail(index) {
   mpvue.navigateTo({
     url: "/pages/detail/main?index=" + index

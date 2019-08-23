@@ -88,7 +88,23 @@
   background-color: #FFAAFF;
 }
 
-/*妖精*/
+
+/*其他*/
 .property20 {
   background-color: #000;
+}
+
+/*物理*/
+.property91 {
+  background-color: #ec5328;
+}
+
+/*特殊*/
+.property92 {
+  background-color: #3367c5;
+}
+
+/*变化*/
+.property93 {
+  background-color: #999;
 }

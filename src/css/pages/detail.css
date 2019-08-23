@@ -45,7 +45,7 @@
 
 .detail .li {
   width: 100%;
-  border-bottom: 1px solid #f9f9f9;
+  border-bottom: 1px solid #f1f1f1;
   height: 50px;
   line-height: 50px;
   padding: 0 20px;
@@ -89,7 +89,7 @@
   height: 30px;
   line-height: 40px;
   font-size: 12px;
-  background-color: #f9f9f9;
+  background-color: #f1f1f1;
   color: #707070;
 }
 
@@ -182,4 +182,55 @@
 .detail .listCalc .blue {
   color: #11f;
   font-weight: bold;
+}
+
+.detail .upgrade .list {
+  margin-top: 20px;
+  border-top: 1px solid #f1f1f1;
+  font-size: 13px;
+}
+
+.detail .upgrade .list .item {
+  width: 100%;
+  border-bottom: 1px solid #f1f1f1;
+  line-height: 50px;
+  min-height: 50px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.detail .item .level {
+  width: 27px;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.detail .item .power {
+  text-align: center;
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  width: 28px;
+}
+
+.detail .item .br {
+  border-right: 1px solid #f1f1f1;
+}
+
+.detail .item .sx {
+  width: 56px !important;
+  color: #fff;
+}
+
+.detail .item .imgUrl {
+  width: 30px;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.detail .item .icon-list {
+  width: 100%;
+  overflow: hidden;
 }
