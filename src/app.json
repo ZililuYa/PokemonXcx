@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/character/main",
+    "pages/skill/main",
     "pages/more/main",
     "pages/egg/main",
     "pages/prop/main",

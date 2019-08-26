@@ -24,13 +24,11 @@ const baseUrl = 'https://pokemon.fantasticmao.cn';
 export function ajax(url, data, method, success = () => {
 }, error = () => {
 }) {
-  console.log('请求接口---->', url);
   const key = data.storage;
   if (key) {
     delete data.storage;
     const _data = mpvue.getStorageSync(key);
     if (_data) {
-      console.log('缓存返回---->', _data);
       success({data: _data});
       return;
     }
@@ -41,7 +39,6 @@ export function ajax(url, data, method, success = () => {
     method,
     success: function (res) {
       if (res.statusCode === 200) {
-        console.log('成功返回---->', res.data);
         if (res.data.code !== 200) {
           mpvue.showToast({
             icon: 'none',
@@ -376,7 +373,10 @@ export function getPokemon(names, id) {
           res.g2 = isProperty(res.type2);
           _list.push(res);
         }
-      })
+      });
+    else {
+      mpvue.switchTab({url: '/pages/index/main'})
+    }
   });
   if (id) return _id;
   return _list
@@ -408,4 +408,9 @@ export function globalToPokemonDetail(index) {
   mpvue.navigateTo({
     url: "/pages/detail/main?index=" + index
   });
+}
+
+// 详情跳转宝可梦详情
+export function globalGoBackHome() {
+  mpvue.switchTab({url: '/pages/index/main'})
 }

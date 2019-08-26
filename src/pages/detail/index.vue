@@ -164,7 +164,7 @@
       <mpNavbar :tabs="tabs" :activeIndex="tabIndex" @tabClick="tabClick"></mpNavbar>
       <div class="upgrade" v-if="tabIndex===0">
         <div class="list">
-          <div class="item" :key="k" v-for="(i, k) in learnSetByLevelingUp">
+          <div class="item" :key="k" v-for="(i, k) in learnSetByLevelingUp" @click="goToMove(i.move)">
             <span class="level">{{i.level1}}</span>
             <span class="move">{{i.move}}</span>
             <div class="fr">
@@ -179,7 +179,7 @@
       </div>
       <div class="upgrade" v-if="tabIndex===1">
         <div class="list">
-          <div class="item" :key="k" v-for="(i, k) in learnSetByTechnicalMachine">
+          <div class="item" :key="k" v-for="(i, k) in learnSetByTechnicalMachine" @click="goToMove(i.move)">
             <img :src="i.imgUrl" class="imgUrl fl" alt=""/>
             <span class="move">{{i.move}}</span>
             <div class="fr">
@@ -195,13 +195,15 @@
       <div class="upgrade" v-if="tabIndex===2">
         <div class="list">
           <div class="item" :key="k" v-for="(i, k) in learnSetByBreeding">
-            <span class="move">{{i.move}}</span>
-            <div class="fr">
-              <span class="power br">{{i.power}}</span>
-              <span class="power br">{{i.accuracy}}</span>
-              <span class="power">{{i.pp}}</span>
-              <span class="power sx" :class="'property'+i.isx">{{i.type}}</span>
-              <span class="power sx" :class="'property'+i.ifl">{{i.category}}</span>
+            <div @click="goToMove(i.move)">
+              <span class="move">{{i.move}}</span>
+              <div class="fr">
+                <span class="power br">{{i.power}}</span>
+                <span class="power br">{{i.accuracy}}</span>
+                <span class="power">{{i.pp}}</span>
+                <span class="power sx" :class="'property'+i.isx">{{i.type}}</span>
+                <span class="power sx" :class="'property'+i.ifl">{{i.category}}</span>
+              </div>
             </div>
             <div class="icon-list">
               <div @click="goTo(a)" class="fl sprite-icon" :key="b" :class="'sprite-icon-'+a"
@@ -276,6 +278,11 @@
       }
     },
     methods: {
+      goToMove(name) {
+        mpvue.navigateTo({
+          url: "/pages/skill/main?name=" + name
+        });
+      },
       goTo(index) {
         mpvue.showLoading({
           title: '加载中...',
@@ -291,7 +298,7 @@
           // 老缓存数据处理
           if (res.data.length && !res.data[0].learnSetByLevelingUp) {
             mpvue.removeStorageSync('detail' + index);
-            this.getPokemon(index);
+            this.getPokemonEvent(index);
             return;
           }
 
@@ -299,15 +306,23 @@
 
           if (res.data.length) {
             this.data = res.data[0];
-            this.learnSetByLevelingUp = this.data.learnSetByLevelingUp.map(ls => {
-              return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
-            });
-            this.learnSetByTechnicalMachine = this.data.learnSetByTechnicalMachine.map(ls => {
-              return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
-            });
-            this.learnSetByBreeding = this.data.learnSetByBreeding.map(ls => {
-              return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category), icon: getPokemon(ls.parent, true)}
-            });
+            if (this.data.learnSetByLevelingUp && this.data.learnSetByLevelingUp.length)
+              this.learnSetByLevelingUp = this.data.learnSetByLevelingUp.map(ls => {
+                return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
+              });
+            if (this.data.learnSetByTechnicalMachine && this.data.learnSetByTechnicalMachine.length)
+              this.learnSetByTechnicalMachine = this.data.learnSetByTechnicalMachine.map(ls => {
+                return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
+              });
+            if (this.data.learnSetByBreeding && this.data.learnSetByBreeding.length)
+              this.learnSetByBreeding = this.data.learnSetByBreeding.map(ls => {
+                return {
+                  ...ls,
+                  isx: isProperty(ls.type),
+                  ifl: isProperty(ls.category),
+                  icon: getPokemon(ls.parent, true)
+                }
+              });
             this.g1 = isProperty(this.data.type1);
             this.g2 = isProperty(this.data.type2);
             let list = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];

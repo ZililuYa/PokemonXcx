@@ -9,7 +9,7 @@
           精灵克制
         </div>
       </div>
-      <div class="li" @click="no">
+      <div class="li" @click="onPicker">
         <div class="i">
           <span class="sprite-icon sprite-icon-006MY"></span>
         </div>
@@ -25,7 +25,7 @@
           特性
         </div>
       </div>
-      <div class="li" @click="no">
+      <div class="li" @click="toPath('/character/main')">
         <div class="i">
           <span class="sprite-icon sprite-icon-254M"></span>
         </div>
@@ -75,20 +75,95 @@
       </div>
     </div>
     <div class="version">版本：v{{version}}</div>
+    <mpPicker ref="mpPicker" :deepLength="1" :pickerValueDefault="pickerValueDefault"
+              @onConfirm="onConfirm" :pickerValueArray="pickerValueArray"></mpPicker>
+
   </div>
 </template>
 
 <script>
   import {version} from '../../../package.json';
+  import mpPicker from 'mpvue-weui/src/picker';
 
   export default {
     data() {
       return {
-        version
+        version,
+        pickerValueDefault: ['怪兽'],
+        pickerValueArray: [
+          {
+            label: '怪兽',
+            value: '怪兽'
+          },
+          {
+            label: '水中1',
+            value: '水中1'
+          },
+          {
+            label: '虫',
+            value: '虫'
+          },
+          {
+            label: '飞行',
+            value: '飞行'
+          },
+          {
+            label: '陆上',
+            value: '陆上'
+          },
+          {
+            label: '妖精',
+            value: '妖精'
+          },
+          {
+            label: '植物',
+            value: '植物'
+          },
+          {
+            label: '人型',
+            value: '人型'
+          },
+          {
+            label: '水中3',
+            value: '水中3'
+          },
+          {
+            label: '矿物',
+            value: '矿物'
+          },
+          {
+            label: '不定形',
+            value: '不定形'
+          },
+          {
+            label: '水中2',
+            value: '水中2'
+          },
+          {
+            label: '龙',
+            value: '龙'
+          },
+          {
+            label: '未发现',
+            value: '未发现'
+          },
+          {
+            label: '百变怪',
+            value: '百变怪'
+          }
+        ]
       }
     },
-
+    components: {
+      mpPicker
+    },
     methods: {
+      onPicker() {
+        this.$refs.mpPicker.show();
+      },
+      onConfirm(data) {
+        this.toPath('/egg/main?name=' + data.label)
+      },
       toPath(url, i) {
         if (i) {
           mpvue.switchTab({
