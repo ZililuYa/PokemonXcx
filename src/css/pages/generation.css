@@ -4,6 +4,24 @@
   font-size: 14px;
 }
 
+.generation .li1 .icon-two,
+.generation .li2 .icon-two,
+.generation .li3 .icon-two,
+.generation .li4 .icon-two,
+.generation .li5 .icon-two,
+.generation .li6 .icon-two,
+.generation .li7 .icon-two{
+  display: none;
+}
+.generation .li8 .icon-one{
+  display: none;
+}
+.generation .li8 .icon-two{
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 70% auto;
+}
+
 .generation .title {
   width: 100%;
   height: 50px;

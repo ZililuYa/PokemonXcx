@@ -66,7 +66,7 @@
       <div class="title">
         种族值
       </div>
-      <div class="race">
+      <div class="race" v-show="data.baseStat">
         <div class="rli color1">
           <span class="fl a">ＨＰ:</span>
           <span class="fl b">{{data.baseStat.hp}}</span>
@@ -112,7 +112,7 @@
       <div class="title">
         能力数值区间
       </div>
-      <div class="section">
+      <div class="section" v-show="data.baseStat">
         <div class="capacity">
           <div class="a"></div>
           <div class="b">50级</div>
@@ -296,11 +296,11 @@
         this.learnSetByBreeding = [];
         const success = res => {
           // 老缓存数据处理
-          if (res.data.length && !res.data[0].learnSetByLevelingUp) {
-            mpvue.removeStorageSync('detail' + index);
-            this.getPokemonEvent(index);
-            return;
-          }
+          // if (!res.data.length) {
+            // mpvue.removeStorageSync('detail' + index);
+            // this.getPokemonEvent(index);
+            // return;
+          // }
 
           mpvue.hideLoading();
 
@@ -329,7 +329,7 @@
             this.listCalc = restrainCalc(list, this.g1);
             if (this.data.type2) this.listCalc = restrainCalc(this.listCalc, this.g2);
             this.basicsCount = effortValue(this.data.detail.effortValue);
-            this.section = section(this.data.baseStat);
+            if (this.data.baseStat) this.section = section(this.data.baseStat);
           } else {
             error();
           }
