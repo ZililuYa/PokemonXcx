@@ -424,6 +424,7 @@ export default {
       index = isIndex(index);
       const that = this;
       const success = function(res) {
+        that.evolve = [];
         Object.keys(res).forEach(id => {
           if (id.indexOf(index) !== -1) {
             that.evolve = res[id];
