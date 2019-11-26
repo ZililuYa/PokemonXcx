@@ -29,7 +29,10 @@ export function ajax(url, data, method, success = () => {
     delete data.storage;
     const _data = mpvue.getStorageSync(key);
     if (_data) {
-      success({ data: _data });
+      if (key !== 'getEvolve')
+        success({ data: _data });
+      else
+        success(_data);
       return;
     }
   }
@@ -51,7 +54,7 @@ export function ajax(url, data, method, success = () => {
           });
           error(res)
         } else {
-          if (key) mpvue.setStorageSync(key, res.data.data);
+          if (key) mpvue.setStorageSync(key, res.data.data ? res.data.data : res.data);
           success(res.data);
         }
       } else {

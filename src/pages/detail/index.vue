@@ -1,7 +1,12 @@
 <template>
   <div class="detail">
     <div class="img">
-      <img :src="'https://s.pokeuniv.com/pokemon/pgl/'+imageIndex+'.png'" alt class="picture" />
+      <img
+        v-if="imageIndex"
+        :src="'https://s.pokeuniv.com/pokemon/pgl/'+imageIndex+'.png'"
+        alt
+        class="picture"
+      />
     </div>
     <div class="ol">
       <div class="li">
