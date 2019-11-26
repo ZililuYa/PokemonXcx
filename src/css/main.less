@@ -1,0 +1,14 @@
+.backgroundcard(@className,@pngName){
+    .sprite-icon-@{className}{
+            background-image: url("https://s.pokeuniv.com/pokemon/icon/@{pngName}.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 70% auto;
+    }
+}
+
+.loop(@i) when (@i <= 890){
+    .backgroundcard(@i,@i);
+    .loop(@i+1);
+}
+.loop(810);

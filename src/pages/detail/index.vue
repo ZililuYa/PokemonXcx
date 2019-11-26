@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
     <div class="img">
-      <img :src="data.detail.imgUrl" alt="" class="picture">
+      <img :src="'https://s.pokeuniv.com/pokemon/pgl/'+imageIndex+'.png'" alt class="picture" />
     </div>
     <div class="ol">
       <div class="li">
@@ -10,7 +10,7 @@
       </div>
       <div class="li">
         宝可梦名称
-        <span class="fr ">{{data.nameZh}}</span>
+        <span class="fr">{{data.nameZh}}</span>
         <span class="fr em">（{{data.nameJa}}）</span>
       </div>
       <div class="li">
@@ -33,7 +33,11 @@
       <div class="li">
         蛋组
         <span class="fr href" @click="toEgg(data.detail.eggGroup1)">{{data.detail.eggGroup1}}</span>
-        <span class="fr href" @click="toEgg(data.detail.eggGroup2)" v-if="data.detail.eggGroup2">{{data.detail.eggGroup2}}</span>
+        <span
+          class="fr href"
+          @click="toEgg(data.detail.eggGroup2)"
+          v-if="data.detail.eggGroup2"
+        >{{data.detail.eggGroup2}}</span>
       </div>
       <div class="li">
         种类
@@ -63,9 +67,7 @@
         基础点数
         <span class="fr">{{basicsCount}}</span>
       </div>
-      <div class="title">
-        种族值
-      </div>
+      <div class="title">种族值</div>
       <div class="race" v-show="data.baseStat">
         <div class="rli color1">
           <span class="fl a">ＨＰ:</span>
@@ -103,15 +105,25 @@
         </div>
       </div>
 
-      <div class="title" v-if="!qq">
-        Advert
-      </div>
+      <div class="title" v-if="!qq">Advert</div>
       <div class="banner" v-if="!qq">
         <ad unit-id="adunit-4322de44f112529c"></ad>
       </div>
-      <div class="title">
-        能力数值区间
+      <div class="title">进化</div>
+      <div class="evolve">
+        <div class="fl" :style="'width:'+evolveBfb+'%'" v-for="(i, k) in evolve" :key="k">
+          <span
+            class="sprite-icon"
+            @click="goTo(i.index)"
+            v-if="i.index"
+            :class="'sprite-icon-'+i.index"
+          ></span>
+          <span class="sprite-icon noIndex" v-if="!i.index">→</span>
+          <div v-if="i.name">{{i.name}}</div>
+          <div class="describe" v-if="i.describe">{{i.describe}}</div>
+        </div>
       </div>
+      <div class="title">能力数值区间</div>
       <div class="section" v-show="data.baseStat">
         <div class="capacity">
           <div class="a"></div>
@@ -149,22 +161,23 @@
           <div class="c">{{section.b5_100}}</div>
         </div>
       </div>
-      <div class="title">
-        对战相克
-      </div>
+      <div class="title">对战相克</div>
       <div class="listCalc">
         <div class="fight fl" v-for="(i, k) in listCalc" :key="k">
           <div class="attribute" :class="'property'+(k+1)">{{property[k]}}</div>
           <div class="t" :class="i>1?'red':i<1?'blue':''">{{i}}</div>
         </div>
       </div>
-      <div class="title">
-        可学会招式表
-      </div>
+      <div class="title">可学会招式表</div>
       <mpNavbar :tabs="tabs" :activeIndex="tabIndex" @tabClick="tabClick"></mpNavbar>
       <div class="upgrade" v-if="tabIndex===0">
         <div class="list">
-          <div class="item" :key="k" v-for="(i, k) in learnSetByLevelingUp" @click="goToMove(i.move)">
+          <div
+            class="item"
+            :key="k"
+            v-for="(i, k) in learnSetByLevelingUp"
+            @click="goToMove(i.move)"
+          >
             <span class="level">{{i.level1}}</span>
             <span class="move">{{i.move}}</span>
             <div class="fr">
@@ -179,8 +192,13 @@
       </div>
       <div class="upgrade" v-if="tabIndex===1">
         <div class="list">
-          <div class="item" :key="k" v-for="(i, k) in learnSetByTechnicalMachine" @click="goToMove(i.move)">
-            <img :src="i.imgUrl" class="imgUrl fl" alt=""/>
+          <div
+            class="item"
+            :key="k"
+            v-for="(i, k) in learnSetByTechnicalMachine"
+            @click="goToMove(i.move)"
+          >
+            <img :src="i.imgUrl" class="imgUrl fl" alt />
             <span class="move">{{i.move}}</span>
             <div class="fr">
               <span class="power br">{{i.power}}</span>
@@ -206,8 +224,13 @@
               </div>
             </div>
             <div class="icon-list">
-              <div @click="goTo(a)" class="fl sprite-icon" :key="b" :class="'sprite-icon-'+a"
-                   v-for="(a, b) in i.icon"></div>
+              <div
+                @click="goTo(a)"
+                class="fl sprite-icon"
+                :key="b"
+                :class="'sprite-icon-'+a"
+                v-for="(a, b) in i.icon"
+              ></div>
             </div>
           </div>
         </div>
@@ -217,141 +240,215 @@
 </template>
 
 <script>
-  import {
-    ajax,
-    isProperty,
-    effortValue,
-    section,
-    globalError,
-    restrainCalc,
-    getPokemon,
-    globalToPokemonDetail
-  } from '../../utils'
-  import mpNavbar from 'mpvue-weui/src/navbar';
+import {
+  ajax,
+  isProperty,
+  effortValue,
+  section,
+  globalError,
+  restrainCalc,
+  getPokemon,
+  isIndex,
+  globalToPokemonDetail
+} from "../../utils";
+import mpNavbar from "mpvue-weui/src/navbar";
 
-  export default {
-    components: {mpNavbar},
-    onShareAppMessage: function () {
-      return {
-        path: '/pages/detail/main?name=' + this._index,
-        query: 'name=' + this._index,
-      }
-    },
-    onLoad: function (option) {
-      const that = this;
-      mpvue.getSystemInfo({
-        success(res) {
-          if (res.AppPlatform === 'qq') {
-            that.qq = true;
-          }
+export default {
+  components: { mpNavbar },
+  onShareAppMessage: function() {
+    return {
+      path: "/pages/detail/main?name=" + this._index,
+      query: "name=" + this._index
+    };
+  },
+  onLoad: function(option) {
+    const that = this;
+    mpvue.getSystemInfo({
+      success(res) {
+        if (res.AppPlatform === "qq") {
+          that.qq = true;
         }
+      }
+    });
+    mpvue.showShareMenu();
+    mpvue.showLoading({
+      title: "加载中..."
+    });
+    // const opt = mpvue.getLaunchOptionsSync(); // 获取参数，目前不能用
+    // console.log(opt);
+    const index = option.index ? option.index : 1;
+    this._index = parseInt(index);
+    this.getPokemonEvent(index);
+  },
+  data() {
+    return {
+      tabIndex: 0,
+      imageIndex: 1,
+      tabs: ["升级", "学习器", "蛋招式"],
+      evolve: [],
+      evolveBfb: 100,
+      g1: "",
+      g2: "",
+      basicsCount: "",
+      _index: "",
+      learnSetByTechnicalMachine: [],
+      learnSetByLevelingUp: [],
+      learnSetByBreeding: [],
+      data: {
+        detail: {},
+        baseStat: {}
+      },
+      property: [
+        "普",
+        "飞",
+        "火",
+        "超",
+        "水",
+        "虫",
+        "电",
+        "岩",
+        "草",
+        "鬼",
+        "冰",
+        "龙",
+        "斗",
+        "恶",
+        "毒",
+        "钢",
+        "地",
+        "妖"
+      ],
+      listCalc: [],
+      section: {},
+      qq: false
+    };
+  },
+  methods: {
+    goToMove(name) {
+      mpvue.navigateTo({
+        url: "/pages/skill/main?name=" + name
       });
-      mpvue.showShareMenu();
+    },
+    goTo(index) {
       mpvue.showLoading({
-        title: '加载中...',
+        title: "加载中..."
       });
-      // const opt = mpvue.getLaunchOptionsSync(); // 获取参数，目前不能用
-      // console.log(opt);
-      const index = option.index ? option.index : 1;
-      this._index = parseInt(index);
+      index = parseInt(index);
       this.getPokemonEvent(index);
     },
-    data() {
-      return {
-        tabIndex: 0,
-        tabs: ['升级', '学习器', '蛋招式'],
-        g1: '',
-        g2: '',
-        basicsCount: '',
-        _index: '',
-        learnSetByTechnicalMachine: [],
-        learnSetByLevelingUp: [],
-        learnSetByBreeding: [],
-        data: {
-          detail: {},
-          baseStat: {},
-        },
-        property: ['普', '飞', '火', '超', '水', '虫', '电', '岩', '草', '鬼', '冰', '龙', '斗', '恶', '毒', '钢', '地', '妖'],
-        listCalc: [],
-        section: {},
-        qq: false,
-      }
-    },
-    methods: {
-      goToMove(name) {
-        mpvue.navigateTo({
-          url: "/pages/skill/main?name=" + name
-        });
-      },
-      goTo(index) {
-        mpvue.showLoading({
-          title: '加载中...',
-        });
-        index = parseInt(index);
-        this.getPokemonEvent(index);
-      },
-      getPokemonEvent(index) {
-        this.learnSetByLevelingUp = [];
-        this.learnSetByTechnicalMachine = [];
-        this.learnSetByBreeding = [];
-        const success = res => {
-          // 老缓存数据处理
-          // if (!res.data.length) {
-            // mpvue.removeStorageSync('detail' + index);
-            // this.getPokemonEvent(index);
-            // return;
-          // }
+    getPokemonEvent(index) {
+      this.learnSetByLevelingUp = [];
+      this.learnSetByTechnicalMachine = [];
+      this.learnSetByBreeding = [];
+      this.imageIndex = parseInt(index);
+      const success = res => {
+        // 老缓存数据处理
+        // if (!res.data.length) {
+        // mpvue.removeStorageSync('detail' + index);
+        // this.getPokemonEvent(index);
+        // return;
+        // }
 
-          mpvue.hideLoading();
+        mpvue.hideLoading();
 
-          if (res.data.length) {
-            this.data = res.data[0];
-            if (this.data.learnSetByLevelingUp && this.data.learnSetByLevelingUp.length)
-              this.learnSetByLevelingUp = this.data.learnSetByLevelingUp.map(ls => {
-                return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
-              });
-            if (this.data.learnSetByTechnicalMachine && this.data.learnSetByTechnicalMachine.length)
-              this.learnSetByTechnicalMachine = this.data.learnSetByTechnicalMachine.map(ls => {
-                return {...ls, isx: isProperty(ls.type), ifl: isProperty(ls.category)}
-              });
-            if (this.data.learnSetByBreeding && this.data.learnSetByBreeding.length)
-              this.learnSetByBreeding = this.data.learnSetByBreeding.map(ls => {
+        if (res.data.length) {
+          this.data = res.data[0];
+          if (
+            this.data.learnSetByLevelingUp &&
+            this.data.learnSetByLevelingUp.length
+          )
+            this.learnSetByLevelingUp = this.data.learnSetByLevelingUp.map(
+              ls => {
                 return {
                   ...ls,
                   isx: isProperty(ls.type),
-                  ifl: isProperty(ls.category),
-                  icon: getPokemon(ls.parent, true)
-                }
-              });
-            this.g1 = isProperty(this.data.type1);
-            this.g2 = isProperty(this.data.type2);
-            let list = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-            this.listCalc = restrainCalc(list, this.g1);
-            if (this.data.type2) this.listCalc = restrainCalc(this.listCalc, this.g2);
-            this.basicsCount = effortValue(this.data.detail.effortValue);
-            if (this.data.baseStat) this.section = section(this.data.baseStat);
-          } else {
-            error();
+                  ifl: isProperty(ls.category)
+                };
+              }
+            );
+          if (
+            this.data.learnSetByTechnicalMachine &&
+            this.data.learnSetByTechnicalMachine.length
+          )
+            this.learnSetByTechnicalMachine = this.data.learnSetByTechnicalMachine.map(
+              ls => {
+                return {
+                  ...ls,
+                  isx: isProperty(ls.type),
+                  ifl: isProperty(ls.category)
+                };
+              }
+            );
+          if (
+            this.data.learnSetByBreeding &&
+            this.data.learnSetByBreeding.length
+          )
+            this.learnSetByBreeding = this.data.learnSetByBreeding.map(ls => {
+              return {
+                ...ls,
+                isx: isProperty(ls.type),
+                ifl: isProperty(ls.category),
+                icon: getPokemon(ls.parent, true)
+              };
+            });
+          this.g1 = isProperty(this.data.type1);
+          this.g2 = isProperty(this.data.type2);
+          let list = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+          this.listCalc = restrainCalc(list, this.g1);
+          if (this.data.type2)
+            this.listCalc = restrainCalc(this.listCalc, this.g2);
+          this.basicsCount = effortValue(this.data.detail.effortValue);
+          if (this.data.baseStat) this.section = section(this.data.baseStat);
+        } else {
+          error();
+        }
+      };
+      const error = () => {
+        globalError();
+      };
+      ajax(
+        "/pokemon/detail",
+        { index, storage: "detail" + index },
+        "GET",
+        success,
+        error
+      );
+      this.getEvolve(index);
+    },
+    getEvolve(index) {
+      index = isIndex(index);
+      const that = this;
+      const success = function(res) {
+        Object.keys(res).forEach(id => {
+          if (id.indexOf(index) !== -1) {
+            that.evolve = res[id];
+            that.evolveBfb = 100 / that.evolve.length;
+            if (that.evolve.length >= 9) that.evolveBfb = 33.33333;
+            return res[id];
           }
-        };
-        const error = () => {
-          globalError();
-        };
-        ajax('/pokemon/detail', {index, storage: 'detail' + index}, 'GET', success, error)
-      },
-      tabClick(tab) {
-        this.tabIndex = tab;
-      },
-      toEgg(egg) {
-        mpvue.navigateTo({
-          url: "/pages/egg/main?name=" + egg
         });
-      },
-      toSpeciality(name) {
-        mpvue.navigateTo({
-          url: "/pages/speciality/main?name=" + name
-        });
-      }
+      };
+      // https://gitee.com/lukangdaye/PokemonTeamData/raw/master/evolve.json
+      ajax(
+        "/lukangdaye/PokemonTeamData/raw/master/evolve.json",
+        { baseUrl: "https://gitee.com", storage: "getEvolve" },
+        "GET",
+        success
+      );
+    },
+    tabClick(tab) {
+      this.tabIndex = tab;
+    },
+    toEgg(egg) {
+      mpvue.navigateTo({
+        url: "/pages/egg/main?name=" + egg
+      });
+    },
+    toSpeciality(name) {
+      mpvue.navigateTo({
+        url: "/pages/speciality/main?name=" + name
+      });
     }
   }
+};
 </script>

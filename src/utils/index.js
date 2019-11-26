@@ -29,17 +29,22 @@ export function ajax(url, data, method, success = () => {
     delete data.storage;
     const _data = mpvue.getStorageSync(key);
     if (_data) {
-      success({data: _data});
+      success({ data: _data });
       return;
     }
   }
+  let now_url = baseUrl + url;
+  if (data.baseUrl) {
+    now_url = data.baseUrl + url;
+    delete data.baseUrl;
+  }
   mpvue.request({
-    url: baseUrl + url,
+    url: now_url,
     data,
     method,
     success: function (res) {
       if (res.statusCode === 200) {
-        if (res.data.code !== 200) {
+        if (res.data.code !== 200 && key !== 'getEvolve') {
           mpvue.showToast({
             icon: 'none',
             title: res.data.message
@@ -375,7 +380,7 @@ export function getPokemon(names, id) {
         }
       });
     else {
-      mpvue.switchTab({url: '/pages/index/main'})
+      mpvue.switchTab({ url: '/pages/index/main' })
     }
   });
   if (id) return _id;
@@ -399,7 +404,7 @@ export function globalError() {
     icon: 'none',
   });
   setTimeout(() => {
-    mpvue.switchTab({url: '/pages/index/main'})
+    mpvue.switchTab({ url: '/pages/index/main' })
   }, 1500);
 }
 
@@ -412,5 +417,5 @@ export function globalToPokemonDetail(index) {
 
 // 详情跳转宝可梦详情
 export function globalGoBackHome() {
-  mpvue.switchTab({url: '/pages/index/main'})
+  mpvue.switchTab({ url: '/pages/index/main' })
 }

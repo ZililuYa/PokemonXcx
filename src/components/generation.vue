@@ -6,8 +6,8 @@
     </div>
     <div class="ol" v-show="isShow">
       <div class="li" :class="'li'+generation" v-for="i in list" :key="i" @click="click(i.index)">
-        <span class="fl sprite-icon icon-one" :class="'sprite-icon-'+i.index"></span>
-        <span class="fl sprite-icon icon-two" :style="'background-image: url(https://s.pokeuniv.com/pokemon/icon/'+i.index+'.png)'" ></span>
+        <span class="fl sprite-icon" :class="'sprite-icon-'+i.index"></span>
+        <!-- <span class="fl sprite-icon icon-two" :style="'background-image: url(https://s.pokeuniv.com/pokemon/icon/'+i.index+'.png)'" ></span> -->
         <span class="fl index">#{{i.index}}</span>
         {{i.nameZh}}
         <span class="fr property" :class="'property'+i.g1">{{i.type1}}</span>

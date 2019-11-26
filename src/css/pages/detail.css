@@ -8,6 +8,31 @@
   padding: 5px 0;
 }
 
+.detail .evolve{
+  overflow: hidden;
+  text-align: center;
+  font-size: 12px;
+  padding-bottom: 10px;
+}
+.detail .evolve .fl {
+  font-size: 12px;
+  text-align: center;
+}
+
+.detail .evolve .sprite-icon {
+  margin-top: 10px;
+  line-height: 40px;
+  font-size: 15px;
+}
+
+.detail .noIndex {
+  background: none !important;
+}
+
+.detail .describe {
+  color: #1aad19;
+}
+
 .detail .section .capacity {
   width: 100%;
   font-size: 13px;
