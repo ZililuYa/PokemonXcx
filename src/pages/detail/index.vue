@@ -114,9 +114,9 @@
       <div class="banner" v-if="!qq">
         <ad unit-id="adunit-4322de44f112529c"></ad>
       </div>
-      <div class="title">进化</div>
-      <div class="evolve">
-        <div class="fl" :style="'width:'+evolveBfb+'%'" v-for="(i, k) in evolve" :key="k">
+      <div class="title" v-if="evolve && evolve.length">进化</div>
+      <div class="evolve" v-if="evolve && evolve.length">
+        <!-- <div class="fl" :style="'width:'+evolveBfb+'%'" v-for="(i, k) in evolve" :key="k">
           <span
             class="sprite-icon"
             @click="goTo(i.index)"
@@ -126,7 +126,70 @@
           <span class="sprite-icon noIndex" v-if="!i.index">→</span>
           <div v-if="i.name">{{i.name}}</div>
           <div class="describe" v-if="i.describe">{{i.describe}}</div>
+        </div>-->
+        <div class="fl evolve-li">
+          <span
+            v-if="evolve[0].id.indexOf('.')==-1"
+            class="sprite-icon"
+            :class="'sprite-icon-'+evolve[0].id"
+          ></span>
+          <img
+            class="evolveImg"
+            :src="'https://s.pokeuniv.com/pokemon/icon/'+evolve[0].id+'.png'"
+            mode="aspectFit"
+            v-if="evolve[0].id.indexOf('.')!=-1"
+            alt
+          />
+          {{evolve[0].name}}
         </div>
+        <div v-for="(i, k) in evolve[1].approach" :key="k">
+          <div class="fl evolve-li approach">
+            <!-- <span class="sprite-icon" :class="'sprite-icon-'+i.id"></span> -->
+            <span v-if="i.id.indexOf('.')==-1" class="sprite-icon" :class="'sprite-icon-'+i.id"></span>
+            <img
+              class="evolveImg"
+              :src="'https://s.pokeuniv.com/pokemon/icon/'+i.id+'.png'"
+              mode="aspectFit"
+              v-if="i.id.indexOf('.')!=-1"
+              alt
+            />
+            {{i.name}}
+            <span class="fr">{{i.text}}</span>
+          </div>
+          <div class="fl evolve-li chain" v-if="i.chain">
+            <!-- <span class="sprite-icon" :class="'sprite-icon-'+i.chain.id"></span> -->
+            <span
+              v-if="i.chain.id.indexOf('.')==-1"
+              class="sprite-icon"
+              :class="'sprite-icon-'+i.id"
+            ></span>
+            <img
+              class="evolveImg"
+              :src="'https://s.pokeuniv.com/pokemon/icon/'+i.chain.id+'.png'"
+              mode="aspectFit"
+              v-if="i.chain.id.indexOf('.')!=-1"
+              alt
+            />
+            {{i.chain.name}}
+            <span class="fr">{{i.chain.text}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="title">异色</div>
+      <div class="heteColor">
+        <img
+          class="colorImg"
+          mode="aspectFit"
+          :src="'https://s.pokeuniv.com/pokemon/sprite/front/'+imageIndex+'.'+(imageIndex>=810?'png':'gif')"
+          alt
+        />
+        <img
+          class="colorImg"
+          mode="aspectFit"
+          :src="'https://s.pokeuniv.com/pokemon/sprite/front-shiny/'+imageIndex+'.'+(imageIndex>=810?'png':'gif')"
+          alt
+        />
       </div>
       <div class="title">能力数值区间</div>
       <div class="section" v-show="data.baseStat">
@@ -428,8 +491,9 @@ export default {
         Object.keys(res).forEach(id => {
           if (id.indexOf(index) !== -1) {
             that.evolve = res[id];
-            that.evolveBfb = 100 / that.evolve.length;
-            if (that.evolve.length >= 9) that.evolveBfb = 33.33333;
+            console.log(that.evolve);
+            // that.evolveBfb = 100 / that.evolve.length;
+            // if (that.evolve.length >= 9) that.evolveBfb = 33.33333;
             return res[id];
           }
         });

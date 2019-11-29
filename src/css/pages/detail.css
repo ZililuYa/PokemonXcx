@@ -1,4 +1,6 @@
-
+view {
+  box-sizing: border-box !important;
+}
 .detail {
   padding: 20px 0;
 }
@@ -10,21 +12,45 @@
 
 .detail .evolve{
   overflow: hidden;
-  text-align: center;
+  text-align: left;
   font-size: 12px;
-  padding-bottom: 10px;
+  padding: 10px 20px;
 }
 .detail .evolve .fl {
   font-size: 12px;
-  text-align: center;
+  text-align: left;
 }
-
+.detail .evolve .fr {
+  line-height: 40px;
+}
 .detail .evolve .sprite-icon {
-  margin-top: 10px;
+  /* margin-top: 10px; */
   line-height: 40px;
   font-size: 15px;
 }
 
+.detail .evolve .evolve-li {
+  width: 100%;
+  line-height: 40px;
+}
+
+.detail .evolve .evolve-li.approach {
+  padding-left: 30px;
+}
+.detail .evolve .evolve-li.chain {
+  padding-left: 60px;
+}
+
+.detail .evolve .evolveImg {
+  width: 40px;
+  height: 40px;
+  float: left;
+  margin-right: 10px;
+}
+.detail .evolve .sprite-icon {
+  margin-right: 10px;
+}
+ 
 .detail .noIndex {
   background: none !important;
 }
@@ -32,6 +58,14 @@
 .detail .describe {
   color: #1aad19;
 }
+.detail .heteColor {
+  padding: 20px;
+}
+.detail .heteColor .colorImg {
+  width: 50%;
+  height: 100px;
+}
+
 
 .detail .section .capacity {
   width: 100%;
