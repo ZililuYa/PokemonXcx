@@ -25,7 +25,7 @@
         </div>
         <div class="t">性格</div>
       </div>
-      <div class="li" @click="no">
+      <div class="li" @click="toPath('/team/main')">
         <div class="i">
           <span class="sprite-icon sprite-icon-257M"></span>
         </div>

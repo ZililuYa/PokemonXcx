@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/teamDetail/main",
+    "pages/team/main",
     "pages/index/main",
     "pages/character/main",
     "pages/skill/main",

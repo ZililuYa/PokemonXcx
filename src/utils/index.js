@@ -29,10 +29,10 @@ export function ajax(url, data, method, success = () => {
     delete data.storage;
     const _data = mpvue.getStorageSync(key);
     if (_data) {
-      if (key !== 'getEvolve')
-        success({ data: _data });
-      else
-        success(_data);
+      // if (key !== 'getEvolve')
+      success({ data: _data });
+      // else
+      //   success(_data);
       return;
     }
   }
@@ -46,17 +46,22 @@ export function ajax(url, data, method, success = () => {
     data,
     method,
     success: function (res) {
+
+      if (key === 'getEvolve') {
+        res.data = { code: 200, data: res.data }
+      }
+
       if (res.statusCode === 200) {
-        if (res.data.code !== 200 && key !== 'getEvolve') {
-          mpvue.showToast({
-            icon: 'none',
-            title: res.data.message
-          });
-          error(res)
-        } else {
-          if (key) mpvue.setStorageSync(key, res.data.data ? res.data.data : res.data);
-          success(res.data);
-        }
+        // if (res.data.code !== 200 && key !== 'getEvolve') {
+        //   mpvue.showToast({
+        //     icon: 'none',
+        //     title: res.data.message
+        //   });
+        //   error(res)
+        // } else {
+        if (key) mpvue.setStorageSync(key, res.data.data ? res.data.data : res.data);
+        success(res.data);
+        // }
       } else {
         mpvue.showToast({
           icon: 'none',
@@ -370,7 +375,7 @@ export function section(baseStat) {
 export function getPokemon(names, id) {
   let _list = [];
   let _id = [];
-  [1, 2, 3, 4, 5, 6, 7].forEach(i => {
+  [1, 2, 3, 4, 5, 6, 7, 8].forEach(i => {
     const _arr = mpvue.getStorageSync('list' + i);
     if (_arr)
       _arr.forEach(res => {

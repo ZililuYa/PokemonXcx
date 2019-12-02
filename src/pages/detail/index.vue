@@ -128,16 +128,12 @@
           <div class="describe" v-if="i.describe">{{i.describe}}</div>
         </div>-->
         <div class="fl evolve-li">
-          <span
-            v-if="evolve[0].id.indexOf('.')==-1"
-            class="sprite-icon"
-            :class="'sprite-icon-'+evolve[0].id"
-          ></span>
+          <span v-if="!evolve[0].ten" class="sprite-icon" :class="'sprite-icon-'+evolve[0].id"></span>
           <img
             class="evolveImg"
             :src="'https://s.pokeuniv.com/pokemon/icon/'+evolve[0].id+'.png'"
             mode="aspectFit"
-            v-if="evolve[0].id.indexOf('.')!=-1"
+            v-if="evolve[0].ten"
             alt
           />
           {{evolve[0].name}}
@@ -145,12 +141,12 @@
         <div v-for="(i, k) in evolve[1].approach" :key="k">
           <div class="fl evolve-li approach">
             <!-- <span class="sprite-icon" :class="'sprite-icon-'+i.id"></span> -->
-            <span v-if="i.id.indexOf('.')==-1" class="sprite-icon" :class="'sprite-icon-'+i.id"></span>
+            <span v-if="!i.ten" class="sprite-icon" :class="'sprite-icon-'+i.id"></span>
             <img
               class="evolveImg"
               :src="'https://s.pokeuniv.com/pokemon/icon/'+i.id+'.png'"
               mode="aspectFit"
-              v-if="i.id.indexOf('.')!=-1"
+              v-if="i.ten"
               alt
             />
             {{i.name}}
@@ -158,16 +154,12 @@
           </div>
           <div class="fl evolve-li chain" v-if="i.chain">
             <!-- <span class="sprite-icon" :class="'sprite-icon-'+i.chain.id"></span> -->
-            <span
-              v-if="i.chain.id.indexOf('.')==-1"
-              class="sprite-icon"
-              :class="'sprite-icon-'+i.id"
-            ></span>
+            <span v-if="!i.chain.ten" class="sprite-icon" :class="'sprite-icon-'+i.chain.id"></span>
             <img
               class="evolveImg"
               :src="'https://s.pokeuniv.com/pokemon/icon/'+i.chain.id+'.png'"
               mode="aspectFit"
-              v-if="i.chain.id.indexOf('.')!=-1"
+              v-if="i.chain.ten"
               alt
             />
             {{i.chain.name}}
@@ -177,7 +169,7 @@
       </div>
 
       <div class="title">异色</div>
-      <div class="heteColor">
+      <div class="heteColor" v-if="imageIndex">
         <img
           class="colorImg"
           mode="aspectFit"
@@ -487,11 +479,30 @@ export default {
       index = isIndex(index);
       const that = this;
       const success = function(res) {
+        res = res.data;
         that.evolve = [];
         Object.keys(res).forEach(id => {
           if (id.indexOf(index) !== -1) {
             that.evolve = res[id];
-            console.log(that.evolve);
+            that.evolve = that.evolve.map(ev => {
+              if (ev.id && ev.id.indexOf(".") !== -1) {
+                ev.ten = true;
+              }
+              if (ev.approach && ev.approach.length) {
+                ev.approach = ev.approach.map(app => {
+                  if (app.id.indexOf(".") !== -1) {
+                    app.ten = true;
+                  }
+                  if (app.chain) {
+                    if (app.chain.id.indexOf(".") !== -1) {
+                      app.chain.ten = true;
+                    }
+                  }
+                  return app;
+                });
+              }
+              return ev;
+            });
             // that.evolveBfb = 100 / that.evolve.length;
             // if (that.evolve.length >= 9) that.evolveBfb = 33.33333;
             return res[id];
